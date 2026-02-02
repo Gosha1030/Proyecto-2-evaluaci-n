@@ -91,14 +91,11 @@ public class SlimeDaoImpl implements SlimeDao {
         return out;
     }
 
-// Util
     private Slime documentToSlime(Document d) {
         try {
-// Se convierte Document -> JSON string -> JSONObject -> Slime usando el constructor que ya tienes
             JSONObject obj = new JSONObject(d.toJson());
             return new Slime(obj);
         } catch (Exception ex) {
-// En caso de fallo, devolver un Slime vacío con toString útil
             Slime s = new Slime();
             System.err.println("Error mapping Document to Slime: " + ex.getMessage());
             return s;

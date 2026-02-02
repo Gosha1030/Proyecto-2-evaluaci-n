@@ -19,10 +19,5 @@ public interface SlimeDao {
     
     Map<String, Integer> countSlimesByType();
 
-    /**
-     * Realiza un $lookup con la colección "foods" y devuelve los documentos
-     * resultantes donde cada documento contiene el slime y un array "foods" con
-     * sus comidas.
-     */
     List<Document> findSlimesWithFoods();
 }
