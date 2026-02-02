@@ -35,14 +35,16 @@ public class Migración_a_BD_relacional {
                         "ALTER TABLE food DROP FOREIGN KEY fk_food_of_slime"
                 );
                 stmt.executeUpdate(
-                        "ALTER TABLE food DROP FOREIGN KEY fk_type_of_diet"
-                );
-                stmt.executeUpdate(
                         "ALTER TABLE slime DROP FOREIGN KEY fk_favourite_food"
+                );
+/*
+                stmt.executeUpdate(
+                        "ALTER TABLE food DROP FOREIGN KEY fk_type_of_diet"
                 );
                 stmt.executeUpdate(
                         "ALTER TABLE slime DROP FOREIGN KEY fk_diet_type"
                 );
+*/
             } catch (SQLException e) {
             }
             stmt.executeUpdate("DELETE FROM food");
@@ -76,7 +78,7 @@ public class Migración_a_BD_relacional {
                     stmt.executeUpdate(sql);
                 }
             }
-            crearTablas(stmt);
+            crearFK(stmt);
 
             String sql = "SELECT s.name, f.name FROM slime s LEFT JOIN food f ON s.id = f.slime_id";
             boolean isResultSet = stmt.execute(sql);
@@ -105,7 +107,7 @@ public class Migración_a_BD_relacional {
                 + "id VARCHAR(50) PRIMARY KEY,"
                 + "name VARCHAR(50),"
                 + "diet VARCHAR(30),"
-                + "favourite_food VARCHAR(50),"
+                + "favourite_food VARCHAR(50) NULL,"
                 + "type VARCHAR(30)"
                 + ")"
         );
@@ -115,31 +117,45 @@ public class Migración_a_BD_relacional {
                 + "id VARCHAR(50) PRIMARY KEY,"
                 + "name VARCHAR(50),"
                 + "type VARCHAR(30),"
-                + "slime_id VARCHAR(50)"
+                + "slime_id VARCHAR(50) NULL"
                 + ")"
         );
     }
 
     private static void crearFK(Statement stmt) throws SQLException {
         stmt.executeUpdate(
+                "UPDATE slime SET favourite_food = NULL "
+                + "WHERE favourite_food = 'no' OR favourite_food = ''"
+        );
+
+        stmt.executeUpdate(
+                "UPDATE food SET slime_id = NULL "
+                + "WHERE slime_id = 'no' OR slime_id = ''"
+        );
+
+        stmt.executeUpdate(
                 "ALTER TABLE food "
                 + "ADD CONSTRAINT fk_food_of_slime "
                 + "FOREIGN KEY (slime_id) REFERENCES slime(id)"
         );
-        stmt.executeUpdate(
-                "ALTER TABLE food "
-                + "ADD CONSTRAINT fk_type_of_diet "
-                + "FOREIGN KEY (type) REFERENCES slime(diet)"
-        );
+
         stmt.executeUpdate(
                 "ALTER TABLE slime "
                 + "ADD CONSTRAINT fk_favorite_food "
                 + "FOREIGN KEY (favourite_food) REFERENCES food(id)"
         );
+/*
+        stmt.executeUpdate(
+                "ALTER TABLE food "
+                + "ADD CONSTRAINT fk_type_of_diet "
+                + "FOREIGN KEY (type) REFERENCES slime(diet)"
+        );
+
         stmt.executeUpdate(
                 "ALTER TABLE slime "
                 + "ADD CONSTRAINT fk_diet_type "
                 + "FOREIGN KEY (diet) REFERENCES food(type)"
         );
+*/
     }
 }

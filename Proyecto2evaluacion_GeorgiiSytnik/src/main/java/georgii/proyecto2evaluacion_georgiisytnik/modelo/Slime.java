@@ -9,14 +9,17 @@ import org.json.JSONObject;
 public class Slime {
     private String id;
     private String name;
+
     /**
      * Slime puede comer comida(food) solo de ese tipo(type)
      */
     private String diet;
+
     /**
      * Comida(food) favorita de slime
      */
     private String favouriteFood;
+
     /**
      * Slime pueden ser de diferentes tipos
      */
